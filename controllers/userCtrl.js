@@ -1,41 +1,63 @@
-import Users from "../models/userModel.js";
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import players from "../utils/mock-api.js";
 
 const userCtrl = {
-  logoutUser: async (req, res) => {},
+  logoutUser: async (req, res) => {
+    try {
+      const { username } = req.body;
+      if (username in players) {
+        res.status(200).json({
+          success: true,
+          msg: `${username} successfully Logout... `,
+        });
+      } else {
+        throw new Error("Username do not match!");
+      }
+    } catch (err) {
+      return res.status(400).json({ success: false, msg: err.message });
+    }
+  },
   loginUser: async (req, res) => {
     try {
-      const { email, password } = req.body;
-      const user = await Users.findOne({ email: email });
-      if (!user) return res.status(400).json({ msg: "User does not exist." });
+      const { username, password } = req.body;
 
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) return res.status(400).json({ msg: "Incorrect password." });
+      if (!username || !password)
+        return res
+          .status(400)
+          .json({ success: false, msg: "Invalid credentials" });
 
-      // if login success create token
-      const payload = { id: user._id, name: user.username };
-      const token = jwt.sign(payload, process.env.TOKEN_SECRET, {
-        expiresIn: "1d",
-      });
-
-      res.json({ token });
+      if (username in players && players[username].password === password) {
+        const player = Object.assign({}, players[username]); //Creating a copy of player
+        delete player.password;
+        // if login success create token
+        const payload = { username };
+        const token = jwt.sign(payload, process.env.TOKEN_SECRET, {
+          expiresIn: "1d",
+        });
+        return res.status(200).json({
+          status: true,
+          data: { ...player, token },
+        });
+      } else {
+        throw new Error("Player does not exist or wrong password");
+      }
     } catch (err) {
-      return res.status(500).json({ msg: err.message });
+      return res.status(400).json({ success: false, msg: err.message });
     }
   },
   verifiedToken: (req, res) => {
     try {
       const token = req.header("Authorization");
-      if (!token) return res.send(false);
+
+      if (!token) return res.status(401).send(false);
 
       jwt.verify(token, process.env.TOKEN_SECRET, async (err, verified) => {
-        if (err) return res.send(false);
+        if (err) return res.status(401).send(false);
 
-        const user = await Users.findById(verified.id);
-        if (!user) return res.send(false);
-
-        return res.send(true);
+        if (verified.username in players) {
+          return res.status(200).send(true);
+        }
+        return res.status(401).send(false);
       });
     } catch (err) {
       return res.status(500).json({ msg: err.message });

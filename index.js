@@ -1,8 +1,9 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import morgan from "morgan";
 import userRouter from "./routes/userRouter.js";
-import noteRouter from "./routes/noteRouter.js";
+import gameRouter from "./routes/gameRouter.js";
 
 const app = express();
 
@@ -17,7 +18,7 @@ app.get("/", (req, res) =>
 );
 
 app.use("/api/users", userRouter);
-app.use("/api/notes", noteRouter);
+app.use("/api/games", gameRouter);
 
 // Listen Server
 const PORT = process.env.PORT || 5000;
