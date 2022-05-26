@@ -16,7 +16,7 @@ const gameCtrl = {
       if (!gamesData) {
         throw new Error("Something went Wrong... ");
       }
-      res.status(200).json({ success: false, data: gamesData });
+      res.status(200).json({ success: true, games: gamesData });
     } catch (error) {
       return res.status(400).json({ success: false, msg: error.message });
     }

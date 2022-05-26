@@ -36,7 +36,7 @@ const userCtrl = {
         });
         return res.status(200).json({
           status: true,
-          data: { ...player, token },
+          data: { player, token },
         });
       } else {
         throw new Error("Player does not exist or wrong password");
@@ -55,7 +55,9 @@ const userCtrl = {
         if (err) return res.status(401).send(false);
 
         if (verified.username in players) {
-          return res.status(200).send(true);
+          const player = Object.assign({}, players[verified.username]); //Creating a copy of player
+          delete player.password;
+          return res.status(200).json({ success: true, player });
         }
         return res.status(401).send(false);
       });
