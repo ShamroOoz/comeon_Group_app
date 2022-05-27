@@ -1,6 +1,6 @@
 export const API =
   process.env.NODE_ENV === "production"
-    ? "https://stripe-subscription-backend-app.vercel.app/api"
+    ? "https://comeon-group-app-backend.vercel.app/api"
     : "http://localhost:5000/api";
 
 export async function fetchFromAPI(endpoint, opts) {
