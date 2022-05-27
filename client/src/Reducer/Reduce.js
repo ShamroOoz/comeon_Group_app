@@ -6,7 +6,8 @@ export const reducer = (state, action) => {
       return {
         ...state,
         loading: false,
-        films: action.payload,
+        games: action.payload?.games,
+        categories: action.payload?.categories,
       };
     case "ERROR":
       return { ...state, error: true, loading: false };

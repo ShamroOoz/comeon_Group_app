@@ -11,12 +11,26 @@ const file = join(__dirname, "../utils", "mock-data.json");
 const gameCtrl = {
   getGames: async (req, res) => {
     try {
-      console.log(__dirname);
-      const gamesData = JSON.parse(fs.readFileSync(file, "utf8"));
-      if (!gamesData) {
-        throw new Error("Something went Wrong... ");
-      }
-      res.status(200).json({ success: true, games: gamesData });
+      const search = req.query["search"] || "";
+      const filter = req.query["filter"] || 0;
+
+      const { games, categories } = JSON.parse(fs.readFileSync(file, "utf8"));
+
+      const searchResults = games.filter(
+        (gm) =>
+          gm.name.toLowerCase().includes(search.toLowerCase()) ||
+          gm.description.toLowerCase().includes(search.toLowerCase())
+      );
+
+      const filteredResults = searchResults.filter((gm) =>
+        gm.categoryIds.includes(+filter)
+      );
+
+      console.log(filteredResults.length);
+      res.status(200).json({
+        success: true,
+        data: { games: filteredResults, categories },
+      });
     } catch (error) {
       return res.status(400).json({ success: false, msg: error.message });
     }
@@ -29,8 +43,9 @@ const gameCtrl = {
         throw new Error("Something went Wrong...");
       }
 
-      let link = playgameData[gameName].src;
+      const link = playgameData[gameName].src;
 
+      console.log(link);
       if (!link) {
         throw new Error("Something went Wrong...");
       }

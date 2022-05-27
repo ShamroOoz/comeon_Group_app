@@ -1,8 +1,7 @@
-import { fetchFromAPI } from "../Utils/helpers";
 import { useState, useEffect, useReducer } from "react";
 import { reducer } from "../Reducer/Reduce";
 import axios from "axios";
-import { initialState, API } from "../Utils/helpers";
+import { initialState, API, fetchFromAPI } from "../Utils/helpers";
 
 export const useProvideService = (params) => {
   const [user, setUser] = useState();
@@ -36,7 +35,7 @@ export const useProvideService = (params) => {
       const headers = {
         "Content-Type": "application/json",
       };
-      const token = localStorage.getItem("userToken");
+      const token = getIdToken();
       if (token) {
         headers["Authorization"] = token;
       }
@@ -48,8 +47,7 @@ export const useProvideService = (params) => {
             ...params,
           },
         });
-        console.log(data);
-        dispatch({ type: "GET_DATA", payload: data.games });
+        dispatch({ type: "GET_DATA", payload: data.data });
       } catch (error) {
         if (axios.isCancel(error)) return;
         console.log(error);

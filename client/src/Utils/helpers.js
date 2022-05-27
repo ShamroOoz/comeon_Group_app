@@ -39,7 +39,8 @@ export const validationChecker = (result) => {
 };
 
 export const initialState = {
-  films: [],
+  games: [],
+  categories: [],
   loading: false,
   error: false,
 };

@@ -20,7 +20,7 @@ const NavBar = () => {
 
   return (
     <nav className="flex items-center justify-center bg-white shadow dark:bg-gray-800">
-      <Logo className="w-60 h-10  mx-1.5 sm:mx-6 cursor-pointer" />
+      <Logo className="w-60 h-10  mx-1.5 sm:mx-6 cursor-pointer " />
 
       <div className="container flex items-center justify-center p-6 mx-auto text-gray-600 capitalize dark:text-gray-300">
         <NavLink to="/home" className={isActive}>
