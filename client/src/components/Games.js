@@ -18,7 +18,7 @@ const Games = ({ name, description, icon, code }) => {
         <div className="flex items-center justify-end">
           <Link
             to={`play/${code}`}
-            className="flex items-center p-2 text-gray-200 bg-green-600 rounded-md"
+            className="flex px-6 py-2 text-sm font-medium leading-5 text-center text-white capitalize bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none"
           >
             Play now
             <ChevronRightIcon className="w-5 h-5" />

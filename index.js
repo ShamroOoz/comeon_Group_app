@@ -8,7 +8,7 @@ import gameRouter from "./routes/gameRouter.js";
 const app = express();
 
 //Middlewares
-app.use(cors());
+app.use(cors("*"));
 app.use(express.json());
 app.use(morgan("tiny"));
 
